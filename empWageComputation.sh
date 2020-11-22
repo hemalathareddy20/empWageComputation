@@ -8,6 +8,8 @@ NUM_WORKING_DAYS=20
 totalEmpHrs=0
 totalWorkingDays=0
 totalWorkHours=0
+#Declaring dictionary
+declare -A dayWiseWages
 function calculateDailyWage()
 {
 empHrs=$1
@@ -18,12 +20,12 @@ echo $daySalary
 function getWorkingHours()
 {
 case $1 in
-         $IS_FULL_TIME ) empHrs=8
-                            ;;
-         $IS_PART_TIME ) empHrs=4
-                            ;;
-                      *) empHrs=0
-                            ;;
+       $IS_FULL_TIME ) empHrs=8
+                         ;;
+       $IS_PART_TIME ) empHrs=4
+                         ;;
+                    *) empHrs=0
+                         ;;
 esac
 echo $empHrs
 }
@@ -38,7 +40,20 @@ echo "Work hours from function getWorkingHours()::::::::::>>> $workHours "
 totalWorkHours=$(( $totalWorkHours + $workHours ))
 echo -e "TotalWorkHours: $totalWorkHours\n"
 
+#Using array to store day-wise salary
+empDailyWage[$totalWorkingDays]="$( calculateDailyWage $workHours )"
+
+#Using dictionary to store day-wise salary
+dayWiseWages[$totalWorkingDays]="$(calculateDailyWage $workHours)"
+
 done
 
 totalSalary=$(( $totalWorkHours * $EMP_RATE_PER_HR ));
+
+echo -e "\n::::::::::::Printing salary stored day wise in an array:::::::::::::::"
+echo ${empDailyWage[@]}
+
+
+echo -e "\n::::::::::::Printing salary stored day wise in dictionary:::::::::::::::"
+echo ${dayWiseWages[@]}
 echo "Total salary: $totalSalary"
